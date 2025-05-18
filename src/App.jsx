@@ -1,6 +1,16 @@
 import React from 'react'
-
+import {useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
 export const App = () => {
+  useGSAP(()=>{
+    const tl = gsap.timeline()
+    tl.to('.vi-mask-group', {
+      rotate: 10,
+      duration: 2,
+      ease: 'power4.easeInOut',
+      transformOrigin: '50% 50%',
+    })
+})
   return (
     <>
      
