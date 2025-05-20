@@ -75,14 +75,21 @@ export const App = () => {
                 <div className="text-4xl -mt-[8px] leading-none text-white">Rockstar</div>
               </div>
             </div>
+            
             <div className="imagesdiv relative overflow-hidden w-full h-full object-cover">
               <img className="absolute top-0 left-0 w-full h-full object-cover" src="./sky.png" alt="" />
               <img className="absolute top-0 left-0 w-full h-full object-cover" src="./bg.png" alt="" />
+                <div className="text text-white flex flex-col gap-3 absolute top-20 left-1/2 -translate-x-1/2 scale-[1.3] rotate-[-10deg]">
+                <h1 className="text-[10rem] leading-none -ml-40">grand</h1>
+                <h1 className="text-[10rem] leading-none ml-20">theft</h1>
+                <h1 className="text-[10rem] leading-none -ml-40">auto</h1>
+              </div>
               <img
                 className="absolute -bottom-35 left-1/2 -translate-x-1/2 w-[210px] md:w-[150px] lg:w-[450px] transition-all duration-500 ease-in-out"
                 src="./girlbg.png"
                 alt="Girl"
               />
+              
             </div>
             <div className='btmbar  text-white bottom-0 left-0 absolute w-full py-15 px-10 bg-gradient-to-t from-black to-transparent'>
               <div className='flex gap-4 items-center' >
