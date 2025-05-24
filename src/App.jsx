@@ -42,19 +42,13 @@ export const App = () => {
     const bgImg = imagesDiv.querySelector('img[src="./bg.png"]');
 
     if (!skyImg || !bgImg) return;
-
-    // Maximum translation values (in px)
     const maxTranslate = 15;
 
     function onMouseMove(e) {
       const rect = imagesDiv.getBoundingClientRect();
-      // Calculate mouse position relative to center of imagesDiv [-1 to 1]
       const relX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const relY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-
-      // For subtle shake, multiply by maxTranslate
-      // Sky moves less, bg moves more for depth effect
-      gsap.to(skyImg, {
+    gsap.to(skyImg, {
         x: relX * maxTranslate * 0.3,
         y: relY * maxTranslate * 0.3,
         duration: 0.3,
@@ -70,7 +64,6 @@ export const App = () => {
     }
 
     function onMouseLeave() {
-      // Reset to original position
       gsap.to([skyImg, bgImg], {
         x: 0,
         y: 0,
@@ -155,3 +148,4 @@ export const App = () => {
 };
 
 export default App;
+ 
