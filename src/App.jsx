@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import 'remixicon/fonts/remixicon.css'
+
 export const App = () => {
   const [showContent, setShowContent] = useState(false);
-
   useGSAP(() => {
     const tl = gsap.timeline();
     tl.to('.vi-mask-group', {
@@ -30,6 +30,63 @@ export const App = () => {
         }
       });
   }, []);
+
+  const imagesDivRef = useRef(null);
+  useEffect(() => {
+    if (!showContent) return;
+
+    const imagesDiv = imagesDivRef.current;
+    if (!imagesDiv) return;
+
+    const skyImg = imagesDiv.querySelector('img[src="./sky.png"]');
+    const bgImg = imagesDiv.querySelector('img[src="./bg.png"]');
+
+    if (!skyImg || !bgImg) return;
+
+    // Maximum translation values (in px)
+    const maxTranslate = 15;
+
+    function onMouseMove(e) {
+      const rect = imagesDiv.getBoundingClientRect();
+      // Calculate mouse position relative to center of imagesDiv [-1 to 1]
+      const relX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const relY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+
+      // For subtle shake, multiply by maxTranslate
+      // Sky moves less, bg moves more for depth effect
+      gsap.to(skyImg, {
+        x: relX * maxTranslate * 0.3,
+        y: relY * maxTranslate * 0.3,
+        duration: 0.3,
+        ease: "power1.out",
+      });
+
+      gsap.to(bgImg, {
+        x: relX * maxTranslate,
+        y: relY * maxTranslate,
+        duration: 0.3,
+        ease: "power1.out",
+      });
+    }
+
+    function onMouseLeave() {
+      // Reset to original position
+      gsap.to([skyImg, bgImg], {
+        x: 0,
+        y: 0,
+        duration: 0.5,
+        ease: "power2.out",
+      });
+    }
+
+    imagesDiv.addEventListener('mousemove', onMouseMove);
+    imagesDiv.addEventListener('mouseleave', onMouseLeave);
+
+    return () => {
+      imagesDiv.removeEventListener('mousemove', onMouseMove);
+      imagesDiv.removeEventListener('mouseleave', onMouseLeave);
+    };
+  }, [showContent]);
 
   return (
     <>
@@ -65,40 +122,30 @@ export const App = () => {
       {showContent && (
         <div className="main w-full">
           <div className="landing w-full h-screen bg-black">
-            <div className="navbar absolute top-0 left-0 w-full z-[10] py-10 px-10">
-              <div className="logo flex gap-7">
-                <div className="lines flex flex-col gap-[5px]">
-                  <div className="line w-10 h-2 bg-white"></div>
-                  <div className="line w-8 h-2 bg-white"></div>
-                  <div className="line w-5 h-2 bg-white"></div>
-                </div>
-                <div className="text-4xl -mt-[8px] leading-none text-white">Rockstar</div>
-              </div>
-            </div>
-            
-            <div className="imagesdiv relative overflow-hidden w-full h-full object-cover">
-              <img className="absolute top-0 left-0 w-full h-full object-cover" src="./sky.png" alt="" />
-              <img className="absolute top-0 left-0 w-full h-full object-cover" src="./bg.png" alt="" />
-                <div className="text text-white flex flex-col gap-3 absolute top-20 left-1/2 -translate-x-1/2 scale-[1.3] rotate-[-10deg]">
+            <div
+              ref={imagesDivRef}
+              className="imagesdiv relative overflow-hidden w-full h-full object-cover"
+            >
+              <img
+                className="absolute top-0 left-0 w-full h-full object-cover"
+                src="./sky.png"
+                alt="Sky"
+              />
+              <img
+                className="absolute top-0 left-0 w-full h-full object-cover"
+                src="./bg.png"
+                alt="Background"
+              />
+              <div className="text-white absolute left-1/2 -translate-x-1/2 w-[210px] md:w-[150px] lg:w-[450px] transition-all duration-500 ease-in-out">
                 <h1 className="text-[10rem] leading-none -ml-40">grand</h1>
                 <h1 className="text-[10rem] leading-none ml-20">theft</h1>
                 <h1 className="text-[10rem] leading-none -ml-40">auto</h1>
               </div>
               <img
-                className="absolute -bottom-35 left-1/2 -translate-x-1/2 w-[210px] md:w-[150px] lg:w-[450px] transition-all duration-500 ease-in-out"
+                className="absolute -bottom-29 left-1/2 -translate-x-1/2 w-[210px] md:w-[150px] lg:w-[450px] transition-all duration-500 ease-in-out"
                 src="./girlbg.png"
                 alt="Girl"
               />
-              
-            </div>
-            <div className='btmbar  text-white bottom-0 left-0 absolute w-full py-15 px-10 bg-gradient-to-t from-black to-transparent'>
-              <div className='flex gap-4 items-center' >
-                <i class="text-3xl ri-arrow-down-line"></i>
-                <h3 className='font-[helvetica] text-xl font-bold'>
-                  Scroll down
-                </h3>
-              </div>
-              <img className='absolute h-[55px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2' src='./ps5.png' alt='ps5' />
             </div>
           </div>
         </div>
